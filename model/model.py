@@ -1,6 +1,6 @@
 from database.DB_connect import get_connection
 from model.automobile import Automobile
-from model.noleggio import Noleggio
+from UI.alert import AlertManager
 
 '''
     MODELLO: 
@@ -35,8 +35,18 @@ class Autonoleggio:
             Funzione che legge tutte le automobili nel database
             :return: una lista con tutte le automobili presenti oppure None
         """
-
-        # TODO
+        lista_automobili = []
+        try:
+            cnx = get_connection()
+            cursor = cnx.cursor(dictionary=True)
+            query = """SELECT * FROM automobile"""
+            cursor.execute(query)
+            for row in cursor:
+                lista_automobili.append(row)
+            cnx.close()
+        except Exception as e:
+            raise e
+        return lista_automobili
 
     def cerca_automobili_per_modello(self, modello) -> list[Automobile] | None:
         """
@@ -44,4 +54,34 @@ class Autonoleggio:
             :param modello: il modello dell'automobile
             :return: una lista con tutte le automobili di marca e modello indicato oppure None
         """
-        # TODO
+        lista_automobili = []
+        try:
+            cnx = get_connection()
+            cursor = cnx.cursor(dictionary=True)
+            query = """SELECT * FROM automobile WHERE modello = %s"""
+            cursor.execute(query, (modello,))
+            for row in cursor:
+                lista_automobili.append(row)
+            cnx.close()
+        except Exception as e:
+            raise e
+        return lista_automobili
+
+    def cerca_automobili_per_marca(self, marca) -> list[Automobile] | None:
+        """
+            Funzione che recupera una lista con tutte le automobili presenti nel database di una certa marca e modello
+            :param marca: il modello dell'automobile
+            :return: una lista con tutte le automobili di marca e marca indicato oppure None
+        """
+        lista_automobili = []
+        try:
+            cnx = get_connection()
+            cursor = cnx.cursor(dictionary=True)
+            query = """SELECT * FROM automobile WHERE marca = %s"""
+            cursor.execute(query, (marca,))
+            for row in cursor:
+                lista_automobili.append(row)
+            cnx.close()
+        except Exception as e:
+            raise e
+        return lista_automobili

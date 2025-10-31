@@ -24,7 +24,6 @@ class View:
         # Elementi UI
         self.txt_titolo = None
         self.txt_responsabile = None
-
         # Non obbligatorio mettere già qui tutti gli elementi UI
 
     def show_alert(self, messaggio):
@@ -35,6 +34,22 @@ class View:
         self.controller = controller
 
     def update(self):
+        self.page.update()
+
+    def cambia_metodo_ricerca(self, e):
+        """Cambia la ricerca da modello a marca"""
+        if self.toggle_cambia_ricerca.value:
+            self.input_modello_auto.visible = False
+            self.pulsante_cerca_auto_modello.visible = False
+            self.input_marca_auto.visible = True
+            self.pulsante_cerca_auto_marca.visible = True
+            self.toggle_cambia_ricerca.label = "Ricerca per marca"
+        else:
+            self.input_modello_auto.visible = True
+            self.pulsante_cerca_auto_modello.visible = True
+            self.input_marca_auto.visible = False
+            self.pulsante_cerca_auto_marca.visible = False
+            self.toggle_cambia_ricerca.label = "Ricerca per modello"
         self.page.update()
 
     def load_interface(self):
@@ -53,7 +68,10 @@ class View:
         self.lista_auto = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
 
         # TextField per ricerca auto per modello
-        self.input_modello_auto = ft.TextField(label="Modello")
+        self.input_modello_auto = ft.TextField(label="Modello", visible = True)
+
+        # TextField per ricerca auto per marca
+        self.input_marca_auto = ft.TextField(label="Marca", visible = False)
 
         # ListView per mostrare il risultato della ricerca auto per modello
         self.lista_auto_ricerca = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
@@ -62,8 +80,12 @@ class View:
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
         pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=self.controller.conferma_responsabile)
 
+
         # Altri Pulsanti da implementare (es. "Mostra" e "Cerca")
-        # TODO
+        pulsante_mostra_auto = ft.ElevatedButton("Mostra", on_click = self.controller.mostra_auto)
+        self.pulsante_cerca_auto_marca = ft.ElevatedButton("Cerca", on_click = self.controller.cerca_auto_marca, visible = False)
+        self.pulsante_cerca_auto_modello = ft.ElevatedButton("Cerca", on_click=self.controller.cerca_auto_modello, visible = True)
+        self.toggle_cambia_ricerca = ft.Switch(label="Ricerca per modello", value=False, on_change=self.cambia_metodo_ricerca)
 
         # --- LAYOUT ---
         self.page.add(
@@ -82,10 +104,16 @@ class View:
             ft.Divider(),
 
             # Sezione 3
-            # TODO
+            ft.Row(controls = [ft.Text("Automobili", size = 20), pulsante_mostra_auto]),
+            self.lista_auto,
+            ft.Divider(),
 
             # Sezione 4
-            # TODO
+            ft.Text("Cerca Automobile", size = 20),
+            self.toggle_cambia_ricerca,
+            ft.Row(controls = [self.input_modello_auto, self.input_marca_auto, self.pulsante_cerca_auto_modello, self.pulsante_cerca_auto_marca],),
+            self.lista_auto_ricerca,
+            ft.Divider()
         )
 
     def cambia_tema(self, e):
