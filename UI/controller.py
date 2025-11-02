@@ -30,7 +30,6 @@ class Controller:
         self._view.update()
 
     def mostra_auto(self, e):
-        # In teoria qui devo chiamare self._view.lista_auto
         try:
             lista_auto = self._model.get_automobili()
             self._view.lista_auto.controls.clear()
